@@ -1,75 +1,158 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"          _
-"      __ | \
-"     /   | /
-"     \__ | \
-" by Amix - http://amix.dk/
-"
-" Maintainer:	Amir Salihefendic <amix3k at gmail.com>
-" Version: 2.7
-" Last Change: 12/10/06 00:09:21
-"
-" Sections:
-" ----------------------
-"   *> General
-"   *> Colors and Fonts
-"   *> Fileformats
-"   *> VIM userinterface
-"   ------ *> Statusline
-"   *> Visual
-"   *> Moving around and tabs
-"   *> General Autocommands
-"   *> Parenthesis/bracket expanding
-"   *> General Abbrevs
-"   *> Editing mappings etc.
-"   *> Command-line config
-"   *> Buffer realted
-"   *> Files and backups
-"   *> Folding
-"   *> Text options
-"   ------ *> Indent
-"   *> Spell checking
-"   *> Plugin configuration
-"   ------ *> Yank ring
-"   ------ *> File explorer
-"   ------ *> Minibuffer
-"   ------ *> Tag list (ctags) - not used
-"   ------ *> LaTeX Suite things
-"   *> Filetype generic
-"   ------ *> Todo
-"   ------ *> VIM
-"   ------ *> HTML related
-"   ------ *> Ruby & PHP section
-"   ------ *> Python section
-"   ------ *> Cheetah section
-"   ------ *> Vim section
-"   ------ *> Java section
-"   ------ *> JavaScript section
-"   ------ *> C mappings
-"   ------ *> SML
-"   ------ *> Scheme bindings
-"   *> Snippets
-"   ------ *> Python
-"   ------ *> javaScript
-"   *> Cope
-"   *> MISC
-"
-"  Tip:
-"   If you find anything that you can't understand than do this:
-"   help keyword OR helpgrep keywords
-"  Example:
-"   Go into command-line mode and type helpgrep nocompatible, ie.
-"   :helpgrep nocompatible
-"   then press <leader>c to see the results, or :botright cw
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set helplang=cn
+set nocompatible              " required
+filetype off                  " required
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let Tlist_Ctags_Cmd = 'ctags'
+
+"" NERDTree
+map <F2> :NERDTreeToggle<CR>
+let NERDTreeWinSize=25
+""""" end NERDTree
+
+" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
+nmap fs :NERDTreeToggle<cr>
+" set the runtime path to include Vundle and initialize
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+call plug#begin('~/.vim/plug_plug')
+"
+" alternatively, pass a path where Vundle should install plugins
+" let Vundle manage Vundle, required
+"Plug 'gmarik/Vundle.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'Chiel92/vim-autoformat'
+Plug 'yegappan/taglist'
+Plug 'yqking/winmanager'
+Plug 'zhisheng/visualmark.vim'
+Plug 'itfootman/winfileexplorer'
+"Plug 'fholgado/minibufexpl.vim'
+Plug 'Shougo/neocomplcache.vim'
+Plug 'ervandew/supertab'
+Plug 'now/vim-sudo'
+Plug 'yegappan/grep'
+Plug 'csliu/a.vim'
+Plug 'vim-jp/vital.vim'
+Plug 'tpope/vim-commentary'
+Plug 'dense-analysis/ale'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kien/ctrlp.vim'
+Plug 'cdelledonne/vim-cmake'
+"NERDTree 配置:F2快捷键显示当前目录树
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"gutentags
+Plug 'ludovicchabant/vim-gutentags'
+" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+
+" 所生成的数据文件的名称
+let g:gutentags_ctags_tagfile = '.tags'
+let g:gutentags_ctags_auto_set_tags=1
+let g:gutentags_generate_on_missing=1
+
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
+let s:vim_tags = expand('./.cache/tags')
+let g:gutentags_modules = []
+if executable('ctags')
+	let g:gutentags_modules += ['ctags']
+endif
+if executable('gtags-cscope') && executable('ctags')
+	let g:gutentags_modules += ['gtags_cscope']
+endif
+
+let g:gutentags_cache_dir = s:vim_tags
+
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+" 检测 ~/.cache/tags 不存在就新建
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+endif
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Plug 'preservim/nerdtree'
+"Plugin 'sigidagi/vim-cmake-project'
+"Plugin 'skywind3000/asynctasks.vim'
+"Plugin 'skywind3000/asyncrun.vim'
+"let g:asyncrun_open = 6
+"let g:asyncrun_rootmarks = ['.root', '.svn', '.git', '.hg', '.project']
+
+"noremap <silent><f6> :AsyncTask project-run<cr>
+"noremap <silent><f7> :AsyncTask project-build<cr>
+"noremap <silent><f5> :AsyncTask file-run<cr>
+"noremap <silent><f9> :AsyncTask file-build<cr>
+
+" All of your Plugins must be added before the following line
+"call vundle#end()            " required
+call plug#end()            " required
+
+filetype plugin indent on    " required
+"let g:airline#extensions#tabline#enabled = 1
+"airline options
+set ambiwidth=double
+  if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+  endif
+  " unicode symbols
+  let g:airline_powerline_fonts=1
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
+  let g:airline_symbols.whitespace = 'Ξ'
+
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.dirty='⚡'
+
+  " old vim-powerline symbols
+  "let g:airline_left_sep = '⮀'
+  "let g:airline_left_alt_sep = '⮁'
+  "let g:airline_right_sep = '⮂'
+  "let g:airline_right_alt_sep = '⮃'
+  "let g:airline_symbols.branch = '⭠'
+  "let g:airline_symbols.readonly = '⭤'
+  "let g:airline_symbols.linenr = '⭡'
+
+  "let g:airline#extensions#tabline#enabled = 0
+  "let g:airline#extensions#tabline#left_sep = ''
+  "let g:airline#extensions#tabline#left_alt_sep = '|'
+  "let g:airline#extensions#tabline#enabled=1
+  "nmap <tab> :bn<cr>
+  "nmap <S-tab> :bp<cr>
+  let g:airline_theme='molokai'
+  "end airline options
+
 let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow=1
-
+"let g:winManagerWindowLayout='NERDTree|TagList'
 let g:winManagerWindowLayout='FileExplorer|TagList'
+"let g:winManagerWindowLayout='NERDTree|TagList'
+"nmap wm :NERDTreeToggle<cr>
 nmap wm :WMToggle<cr>
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1
@@ -104,6 +187,24 @@ set mouse=a
 let mapleader = ","
 let g:mapleader = ","
 
+"Map auto complete of (, ", ', [
+
+"Map auto complete of (, ", ', [
+inoremap $1 ()<esc>:let leavechar=")"<cr>i
+inoremap $2 []<esc>:let leavechar="]"<cr>i
+inoremap $4 {<esc>o}<esc>:let leavechar="}"<cr>O
+inoremap $3 {}<esc>:let leavechar="}"<cr>i
+inoremap $q ''<esc>:let leavechar="'"<cr>i
+inoremap $w ""<esc>:let leavechar='"'<cr>i
+
+
+autocmd FileType c map <buffer> <leader><space> :w<cr>:!gcc %<cr>
+autocmd FileType c inoremap { {}<ESC>i<cr><ESC>O
+autocmd FileType h inoremap { {}<ESC>i<cr><ESC>O
+autocmd FileType cpp inoremap { {}<ESC>i<cr><ESC>O
+autocmd FileType cxx inoremap { {}<ESC>i<cr><ESC>O
+autocmd FileType hxx inoremap { {}<ESC>i<cr><ESC>O
+
 "Fast saving
 nmap <leader>w :w!<cr>
 nmap <leader>f :find<cr>
@@ -136,7 +237,7 @@ syntax enable
 "elseif MySys() == "linux"
 "  set gfn=Monospace\ 11
 "endif
-
+set encoding=utf8
 set fileencodings=utf8,ucs-bom,utf-16le,gb2312,cp936,gb18030,latin1
 set fileencoding=utf8
 
@@ -150,7 +251,11 @@ if has("gui_running")
   set gfn=Roboto\ Mono\ 10
 else
   set background=dark
-  colorscheme zellner
+  if has("termguicolors")
+    set termguicolors
+  endif
+  "colorscheme desert 
+  colorscheme evening
 endif
 
 "Some nice mapping to switch syntax (useful if one mixes different languages in one file)
@@ -211,12 +316,14 @@ inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
+"
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"  return neocomplcache#smart_close_popup() . "\<CR>"
+"  " For no inserting <CR> key.
+"  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+"endfunction
+"
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
@@ -247,7 +354,7 @@ endif
 " => VIM userinterface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Set 7 lines to the curors - when moving vertical..
-set so=7
+set so=4
 
 "Turn on WiLd menu
 set wildmenu
@@ -502,7 +609,7 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
 " Buffer - reverse everything ... :)
-map <F9> ggVGg?
+"map <F9> ggVGg?
 
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
@@ -638,6 +745,7 @@ map <leader>s? z=
    autocmd BufRead,BufNew :call UMiniBufExplorer
 
 
+
    """"""""""""""""""""""""""""""
    " => Tag list (ctags) - not used
    """"""""""""""""""""""""""""""
@@ -646,7 +754,7 @@ map <leader>s? z=
    "let Tlist_Show_Menu = 1
    "map <leader>t :Tlist<cr>
 
-   set tags=tags;/
+   "set tags=tags;/
 
    """"""""""""""""""""""""""""""
    " => LaTeX Suite things
@@ -929,10 +1037,11 @@ inoremap <C-v> <esc>:set paste<cr>mui<C-R>+<esc>mv'uV'v=:set nopaste<cr>
 " Syntax used is:
 "   *> Link
 "   => Anchor
+
 function! SmartTOHtml()
    TOhtml
    try
-    %s/&quot;\s\+\*&gt; \(.\+\)</" <a href="#\1" style="color: cyan">\1<\/a></g
+    %s/&quot;\s\+\*&gt; \(.\+\)</" <a href="#\1" style="color: desert">\1<\/a></g
     %s/&quot;\(-\|\s\)\+\*&gt; \(.\+\)</" \&nbsp;\&nbsp; <a href="#\2" style="color: cyan;">\2<\/a></g
     %s/&quot;\s\+=&gt; \(.\+\)</" <a name="\1" style="color: #fff">\1<\/a></g
    catch
@@ -940,4 +1049,3 @@ function! SmartTOHtml()
    exe ":write!"
    exe ":bd"
 endfunction
-

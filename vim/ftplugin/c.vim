@@ -38,8 +38,8 @@ endif
  map  <buffer>  <silent>  <A-F9>       :call C_Compile()<CR>:redraw<CR>:call C_HlMessage()<CR>
 imap  <buffer>  <silent>  <A-F9>  <C-C>:call C_Compile()<CR>:redraw<CR>:call C_HlMessage()<CR>
 "
- map  <buffer>  <silent>    <F9>       :call C_Link()<CR>:redraw<CR>:call C_HlMessage()<CR>
-imap  <buffer>  <silent>    <F9>  <C-C>:call C_Link()<CR>:redraw<CR>:call C_HlMessage()<CR>
+ "map  <buffer>  <silent>    <F9>       :call C_Link()<CR>:redraw<CR>:call C_HlMessage()<CR>
+"imap  <buffer>  <silent>    <F9>  <C-C>:call C_Link()<CR>:redraw<CR>:call C_HlMessage()<CR>
 "
 " <C-C> seems to be essential here:
  map  <buffer>  <silent>  <C-F9>       :call C_Run()<CR>
