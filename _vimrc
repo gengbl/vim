@@ -1,6 +1,11 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set encoding=utf8
+set fileencodings=utf8,ucs-bom,utf-16le,gb2312,cp936,gb18030,latin1
+set fileencoding=utf8
+
 set helplang=cn
 set nocompatible              " required
+
 filetype off                  " required
 
 let Tlist_Ctags_Cmd = 'ctags'
@@ -9,6 +14,10 @@ let Tlist_Ctags_Cmd = 'ctags'
 map <F2> :NERDTreeToggle<CR>
 let NERDTreeWinSize=25
 """"" end NERDTree
+let g:useminibuf=1
+if !exists("g:useminibuf")
+    let g:loaded_minibufexplorer=1
+endif
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 nmap fs :NERDTreeToggle<cr>
@@ -52,7 +61,7 @@ let g:gutentags_ctags_auto_set_tags=1
 let g:gutentags_generate_on_missing=1
 
 " 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
-let s:vim_tags = expand('./.cache/tags')
+let s:vim_tags = expand('~/.cache/tags')
 let g:gutentags_modules = []
 if executable('ctags')
 	let g:gutentags_modules += ['ctags']
@@ -75,30 +84,23 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Plug 'preservim/nerdtree'
-"Plugin 'sigidagi/vim-cmake-project'
-"Plugin 'skywind3000/asynctasks.vim'
-"Plugin 'skywind3000/asyncrun.vim'
-"let g:asyncrun_open = 6
-"let g:asyncrun_rootmarks = ['.root', '.svn', '.git', '.hg', '.project']
-
-"noremap <silent><f6> :AsyncTask project-run<cr>
-"noremap <silent><f7> :AsyncTask project-build<cr>
-"noremap <silent><f5> :AsyncTask file-run<cr>
-"noremap <silent><f9> :AsyncTask file-build<cr>
-
 " All of your Plugins must be added before the following line
 "call vundle#end()            " required
 call plug#end()            " required
 
 filetype plugin indent on    " required
-"let g:airline#extensions#tabline#enabled = 1
+
+
+"
 "airline options
+"set linespace=0
 set ambiwidth=double
   if !exists('g:airline_symbols')
     let g:airline_symbols = {}
   endif
   " unicode symbols
   let g:airline_powerline_fonts=1
+
   let g:airline_left_sep = '»'
   let g:airline_left_sep = '▶'
   let g:airline_right_sep = '«'
@@ -123,7 +125,7 @@ set ambiwidth=double
   let g:airline_left_alt_sep = ''
   let g:airline_right_sep = ''
   let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
+  "let g:airline_symbols.branch = ''
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = '☰'
   let g:airline_symbols.maxlinenr = ''
@@ -138,27 +140,49 @@ set ambiwidth=double
   "let g:airline_symbols.readonly = '⭤'
   "let g:airline_symbols.linenr = '⭡'
 
-  "let g:airline#extensions#tabline#enabled = 0
-  "let g:airline#extensions#tabline#left_sep = ''
-  "let g:airline#extensions#tabline#left_alt_sep = '|'
-  "let g:airline#extensions#tabline#enabled=1
-  "nmap <tab> :bn<cr>
-  "nmap <S-tab> :bp<cr>
-  let g:airline_theme='molokai'
+  if !exists("g:useminibuf")
+      let g:airline#extensions#tabline#enabled = 1
+      let g:airline#extensions#tabline#enabled = 0
+      let g:airline#extensions#tabline#left_sep = ''
+      let g:airline#extensions#tabline#left_alt_sep = '|'
+      let g:airline#extensions#tabline#enabled=1
+      nmap <tab> :bn<cr>
+      nmap <S-tab> :bp<cr>
+      "let g:airline_theme='molokai'
+  endif
+  let g:airline_theme='alduin'
   "end airline options
 
 let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow=1
-"let g:winManagerWindowLayout='NERDTree|TagList'
 let g:winManagerWindowLayout='FileExplorer|TagList'
-"let g:winManagerWindowLayout='NERDTree|TagList'
 "nmap wm :NERDTreeToggle<cr>
 nmap wm :WMToggle<cr>
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
+   """"""""""""""""""""""""""""""
+   " => Minibuffer
+   """"""""""""""""""""""""""""""
+
+   if exists('g:useminibuf')
+       let g:miniBufExplMapCTabSwitchBufs = 1
+       let g:miniBufExplMapWindowNavVim = 1
+       let g:miniBufExplMapWindowNavArrows = 1
+
+       let g:miniBufExplModSelTarget = 1
+       let g:miniBufExplorerMoreThanOne = 2
+       let g:miniBufExplModSelTarget = 0
+       let g:miniBufExplUseSingleClick = 1
+       let g:miniBufExplMapWindowNavVim = 1
+       let g:miniBufExplVSplit = 25
+       let g:miniBufExplSplitBelow=1
+
+       let g:bufExplorerSortBy = "name"
+
+       autocmd BufRead,BufNew :call UMiniBufExplorer
+   endif
+
 nnoremap <silent> <F12> :A<CR>
 nnoremap <silent> <F3> :Grep<CR>
+
 
 if &bg == "dark" 
  highlight SignColor ctermfg=white ctermbg=blue guifg=wheat guibg=peru
@@ -213,6 +237,7 @@ nmap <leader>f :find<cr>
 map <leader>s :source ~/.vimrc<cr>
 "Fast editing of .vimrc
 map <leader>e :e! ~/.vimrc<cr>
+nmap <leader>o :CtrlP<cr>
 "When .vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vim/vimrc
 
@@ -237,9 +262,6 @@ syntax enable
 "elseif MySys() == "linux"
 "  set gfn=Monospace\ 11
 "endif
-set encoding=utf8
-set fileencodings=utf8,ucs-bom,utf-16le,gb2312,cp936,gb18030,latin1
-set fileencoding=utf8
 
 
 if has("gui_running")
@@ -695,8 +717,7 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
    """"""""""""""""""""""""""""""
@@ -729,20 +750,6 @@ map <leader>s? z=
    let g:explDetailedHelp=0
 
 
-   """"""""""""""""""""""""""""""
-   " => Minibuffer
-   """"""""""""""""""""""""""""""
-   let g:miniBufExplModSelTarget = 1
-   let g:miniBufExplorerMoreThanOne = 2
-   let g:miniBufExplModSelTarget = 0
-   let g:miniBufExplUseSingleClick = 1
-   let g:miniBufExplMapWindowNavVim = 1
-   let g:miniBufExplVSplit = 25
-   let g:miniBufExplSplitBelow=1
-
-   let g:bufExplorerSortBy = "name"
-
-   autocmd BufRead,BufNew :call UMiniBufExplorer
 
 
 
