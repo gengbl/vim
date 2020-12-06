@@ -76,6 +76,7 @@ let g:gutentags_cache_dir = s:vim_tags
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--exclude=build']
 
 " 检测 ~/.cache/tags 不存在就新建
 if !isdirectory(s:vim_tags)
@@ -90,7 +91,17 @@ call plug#end()            " required
 
 filetype plugin indent on    " required
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-cmake
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+map <F9> :CMakeGenerate Release<cr>
+map <F7> :CMakeBuild<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+" airline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 "airline options
 "set linespace=0
